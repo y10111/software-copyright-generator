@@ -15,12 +15,6 @@ jobs:
           java-version: 21
           distribution: 'temurin'
           cache: 'maven'
-      - name: Download JavaFX jmods (Linux x86_64)
-        run: |
-          mkdir -p javafx-linux-x86_64
-          curl -L -o javafx-jmods.zip https://download2.gluonhq.com/openjfx/21.0.6/openjfx-21.0.6_linux-x86_64_bin-jmods.zip
-          unzip -q javafx-jmods.zip -d javafx-linux-x86_64
-          rm javafx-jmods.zip
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml
       - name: Upload DEB

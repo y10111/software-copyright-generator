@@ -122,6 +122,17 @@
                             <excludeGroupIds>org.openjfx</excludeGroupIds>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-javafx-to-modules</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeGroupIds>org.openjfx</includeGroupIds>
+                            <outputDirectory>${project.build.directory}/javafx-modules</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -155,7 +166,7 @@
                             <toolName>jlink</toolName>
                             <removeDirectories>${project.build.directory}/jvm-image/</removeDirectories>
                             <modulePath>
-                                ${project.basedir}/javafx-${os.detected.classifier}/javafx-jmods-${javafx.version}/
+                                ${project.build.directory}/javafx-modules/
                             </modulePath>
                             <addModules>${jvm.modules}</addModules>
                             <output>${project.build.directory}/jvm-image</output>
