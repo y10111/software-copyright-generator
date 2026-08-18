@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.copyright.generator.controller.MainController"
+            stylesheets="@../css/style.css">
+
+    <top>
+        <MenuBar>
+            <Menu text="文件">
+                <MenuItem text="导入项目源码" onAction="#onImportSource" />
+                <SeparatorMenuItem />
+                <MenuItem text="退出程序" onAction="#onExit" />
+            </Menu>
+            <Menu text="帮助">
+                <MenuItem text="使用说明" onAction="#onHelp" />
+                <MenuItem text="关于" onAction="#onAbout" />
+            </Menu>
+        </MenuBar>
+    </top>
+
+    <center>
+        <VBox spacing="8" styleClass="main-container">
+            <padding>
+                <Insets top="10" right="10" bottom="5" left="10" />
+            </padding>
+
+            <!-- 软件信息 -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="* 软件名称:" prefWidth="80" styleClass="required-label" />
+                <TextField fx:id="softwareNameField" promptText="请输入软件名称" HBox.hgrow="ALWAYS" />
+                <Label text="* 版本号:" prefWidth="65" styleClass="required-label" />
+                <TextField fx:id="versionField" promptText="V1.0" prefWidth="100" />
+            </HBox>
+
+            <!-- 源码目录 -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="* 源码目录:" prefWidth="80" styleClass="required-label" />
+                <TextField fx:id="sourceDirField" promptText="请选择项目源码目录" editable="false" HBox.hgrow="ALWAYS" />
+                <Button text="选择" onAction="#onSelectDirectory" />
+            </HBox>
+
+            <!-- 输出目录 -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="输出目录:" prefWidth="80" />
+                <TextField fx:id="outputDirField" promptText="默认源码目录同级的「输出文档」" editable="false" HBox.hgrow="ALWAYS" />
+                <Button text="选择" onAction="#onSelectOutputDir" />
+            </HBox>
+
+            <!-- 文件后缀 -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="文件后缀:" prefWidth="80" />
+                <TextField fx:id="extensionsField" promptText="例如: java js py (空格分隔，留空则全部)" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- 忽略目录 -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="忽略目录:" prefWidth="80" />
+                <TextField fx:id="ignoreDirsField" promptText="例如: node_modules target .git (空格分隔)" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- 生成模式 -->
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <Label text="生成模式:" prefWidth="80" />
+                <fx:define>
+                    <ToggleGroup fx:id="modeGroup" />
+                </fx:define>
+                <RadioButton text="全量生成" toggleGroup="$modeGroup" fx:id="fullModeRadio" selected="true" />
+                <RadioButton text="前30页 + 后30页" toggleGroup="$modeGroup" fx:id="partialModeRadio" />
+            </HBox>
+
+            <!-- 操作按钮 -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label prefWidth="80" />
+                <Button text="开始生成" fx:id="generateButton" onAction="#onGenerate" styleClass="generate-button" />
+                <Button text="打开输出目录" fx:id="openOutputDirButton" onAction="#onOpenOutputDir"
+                        styleClass="open-dir-button" visible="false" />
+            </HBox>
+
+            <!-- 扫描结果 -->
+            <HBox spacing="30" alignment="CENTER_LEFT" styleClass="result-bar">
+                <padding>
+                    <Insets top="5" right="10" bottom="5" left="10" />
+                </padding>
+                <Label text="扫描结果:" />
+                <Label fx:id="fileCountLabel" text="--" />
+                <Label fx:id="lineCountLabel" text="--" styleClass="line-count-label" />
+            </HBox>
+
+            <!-- 日志输出 -->
+            <Label text="日志输出:" />
+            <ScrollPane fx:id="logScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS"
+                        styleClass="log-scroll-pane">
+                <TextFlow fx:id="logTextFlow" styleClass="log-text-flow" />
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- 底部状态栏 -->
+    <bottom>
+        <HBox styleClass="status-bar" spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="3" right="10" bottom="3" left="10" />
+            </padding>
+            <Label fx:id="statusLabel" text="就绪" />
+            <Label text="进度:" />
+            <ProgressBar fx:id="progressBar" prefWidth="200" progress="0" />
+            <Label fx:id="progressLabel" text="0%" prefWidth="45" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <Label fx:id="authorLabel" text="by vx公众号：全粘程序员" />
+        </HBox>
+    </bottom>
+</BorderPane>
