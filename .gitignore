@@ -8,3 +8,4 @@ dependency-reduced-pom.xml
 *.war
 *.log
 .DS_Store
+javafx-*/

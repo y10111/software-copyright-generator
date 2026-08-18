@@ -12,31 +12,29 @@
     <name>软著程序鉴别材料生成器</name>
     <description>自动扫描源码生成软著申请所需的程序鉴别材料 Word 文档</description>
 
-    <!--
-        版本统一管理
-        - maven.compiler.source/target: Java 21，maven-compiler-plugin 3.x 自动读取
-        - javafx.classifier: 默认空，由下方 profiles 根据当前 OS/架构自动填入
-          非空时 Maven 会下载对应平台的 JavaFX 原生库（.dylib/.dll），
-          确保 fat JAR 中包含正确的本地图形库
-    -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
         <poi.version>5.2.5</poi.version>
         <javafx.version>21.0.6</javafx.version>
         <javafx.classifier></javafx.classifier>
+        <!-- jpackage 打包属性 -->
+        <main-class>com.copyright.generator.AppLauncher</main-class>
+        <app.name>SoftwareCopyrightGenerator</app.name>
+        <app.version>1.0.0</app.version>
+        <jvm.modules>javafx.controls,javafx.fxml,javafx.graphics,javafx.base</jvm.modules>
+        <windows.upgrade.uuid>a1b2c3d4-e5f6-7890-abcd-ef1234567890</windows.upgrade.uuid>
+        <windows.vendor>Copyright</windows.vendor>
+        <macos.sign></macos.sign>
+        <macos.sign.identity></macos.sign.identity>
     </properties>
 
     <dependencies>
-        <!-- Apache POI: 生成 Word(.docx) 文档，包括页眉页脚、字体、行距等排版 -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>${poi.version}</version>
         </dependency>
-
-        <!-- JavaFX 桌面 GUI: 提供窗口、控件、FXML 加载 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -49,14 +47,12 @@
             <version>${javafx.version}</version>
             <classifier>${javafx.classifier}</classifier>
         </dependency>
-        <!-- javafx-graphics: 底层图形引擎，JavaFX 运行必需，controls 不会自动传递此依赖 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
             <version>${javafx.version}</version>
             <classifier>${javafx.classifier}</classifier>
         </dependency>
-        <!-- javafx-base: 基础类型和工具，JavaFX 运行必需 -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
@@ -66,83 +62,154 @@
     </dependencies>
 
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.0</version>
+            </extension>
+        </extensions>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/packaging</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/packaging</targetPath>
+            </resource>
+            <resource>
+                <filtering>true</filtering>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
-            <!-- Java 编译插件: source/target 读取上方 properties 中的 maven.compiler.source/target -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
             </plugin>
-
-            <!--
-                maven-shade-plugin: 生成 fat JAR（所有依赖打入一个包）
-                用于本地直接运行 java -jar 测试，无需额外配置 classpath
-            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.5.0</version>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>3.0.0-M1</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
+                        <id>copy-dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>shade</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.copyright.generator.MainApp</mainClass>
-                                </transformer>
-                            </transformers>
-                            <!-- 排除 JAR 签名文件，避免 shade 合并时冲突 -->
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
+                            <excludeGroupIds>org.openjfx</excludeGroupIds>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-            <!--
-                javafx-maven-plugin: mvn javafx:run 一键启动
-                自动将 JavaFX 模块加入模块路径，无需手动配置 VM options
-            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/dependency</outputDirectory>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.copyright.generator.MainApp</mainClass>
+                    <mainClass>${main-class}</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>io.github.wiverson</groupId>
+                <artifactId>jtoolprovider-plugin</artifactId>
+                <version>1.0.34</version>
+                <executions>
+                    <execution>
+                        <id>jlink</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java-tool</goal>
+                        </goals>
+                        <configuration>
+                            <toolName>jlink</toolName>
+                            <removeDirectories>${project.build.directory}/jvm-image/</removeDirectories>
+                            <modulePath>
+                                ${project.basedir}/javafx-${os.detected.classifier}/javafx-jmods-${javafx.version}/
+                            </modulePath>
+                            <addModules>${jvm.modules}</addModules>
+                            <output>${project.build.directory}/jvm-image</output>
+                            <args>
+                                <arg>--strip-native-commands</arg>
+                                <arg>--no-header-files</arg>
+                                <arg>--strip-debug</arg>
+                                <arg>--no-man-pages</arg>
+                                <arg>--compress=2</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jpackage</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>java-tool</goal>
+                        </goals>
+                        <configuration>
+                            <toolName>jpackage</toolName>
+                            <writeOutputToLog>true</writeOutputToLog>
+                            <writeErrorsToLog>true</writeErrorsToLog>
+                            <failOnError>true</failOnError>
+                            <removeDirectories>${project.build.directory}/installer-work</removeDirectories>
+                            <args>@${project.build.directory}/packaging/${os.detected.name}-jpackage.txt</args>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 
-    <!--
-        平台自动检测 Profiles
-        根据当前 OS 和 CPU 架构自动设置 javafx.classifier，
-        使 Maven 下载包含原生库的 JavaFX 平台包。
-        分类器映射:
-          macOS aarch64 → mac-aarch64    (Apple Silicon M1/M2/M3)
-          macOS x86_64  → mac            (Intel Mac)
-          Windows amd64 → win            (Windows x64)
-          Linux   amd64 → linux          (Linux x64)
-    -->
     <profiles>
+        <profile>
+            <id>github-action</id>
+            <activation>
+                <property>
+                    <name>env.GITHUB_RUN_NUMBER</name>
+                </property>
+            </activation>
+            <properties>
+                <app.version>1.${env.GITHUB_RUN_NUMBER}.${env.GITHUB_RUN_ATTEMPT}</app.version>
+            </properties>
+        </profile>
         <profile>
             <id>javafx-mac-aarch64</id>
             <activation>
-                <os>
-                    <family>mac</family>
-                    <arch>aarch64</arch>
-                </os>
+                <os><family>mac</family><arch>aarch64</arch></os>
             </activation>
             <properties>
                 <javafx.classifier>mac-aarch64</javafx.classifier>
@@ -151,10 +218,7 @@
         <profile>
             <id>javafx-mac-x86_64</id>
             <activation>
-                <os>
-                    <family>mac</family>
-                    <arch>x86_64</arch>
-                </os>
+                <os><family>mac</family><arch>x86_64</arch></os>
             </activation>
             <properties>
                 <javafx.classifier>mac</javafx.classifier>
@@ -163,10 +227,7 @@
         <profile>
             <id>javafx-win-x86_64</id>
             <activation>
-                <os>
-                    <family>windows</family>
-                    <arch>amd64</arch>
-                </os>
+                <os><family>windows</family><arch>amd64</arch></os>
             </activation>
             <properties>
                 <javafx.classifier>win</javafx.classifier>
@@ -175,10 +236,7 @@
         <profile>
             <id>javafx-linux-x86_64</id>
             <activation>
-                <os>
-                    <family>unix</family>
-                    <arch>amd64</arch>
-                </os>
+                <os><family>unix</family><arch>amd64</arch></os>
             </activation>
             <properties>
                 <javafx.classifier>linux</javafx.classifier>

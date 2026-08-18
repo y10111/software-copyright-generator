@@ -1,0 +1,54 @@
+name: Build macOS Installer
+
+on:
+  workflow_dispatch:
+    branches: [main]
+
+jobs:
+  build-macos-aarch64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Download JavaFX SDK (macOS aarch64)
+        run: |
+          mkdir -p javafx-osx-aarch_64
+          curl -L -o javafx-sdk.zip https://download2.gluonhq.com/openjfx/21.0.6/openjfx-21.0.6_osx-aarch64_bin-sdk.zip
+          unzip -q javafx-sdk.zip -d javafx-osx-aarch_64
+          rm javafx-sdk.zip
+      - name: Build with Maven
+        run: mvn -B clean install --file pom.xml
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macOS-aarch64-dmg
+          path: target/*.dmg
+
+  build-macos-x86_64:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: 'maven'
+      - name: Download JavaFX SDK (macOS x86_64)
+        run: |
+          mkdir -p javafx-osx-x86_64
+          curl -L -o javafx-sdk.zip https://download2.gluonhq.com/openjfx/21.0.6/openjfx-21.0.6_osx-x86_64_bin-sdk.zip
+          unzip -q javafx-sdk.zip -d javafx-osx-x86_64
+          rm javafx-sdk.zip
+      - name: Build with Maven
+        run: mvn -B clean install --file pom.xml
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: macOS-x86_64-dmg
+          path: target/*.dmg
