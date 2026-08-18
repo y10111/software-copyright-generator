@@ -196,17 +196,6 @@
 
     <profiles>
         <profile>
-            <id>github-action</id>
-            <activation>
-                <property>
-                    <name>env.GITHUB_RUN_NUMBER</name>
-                </property>
-            </activation>
-            <properties>
-                <app.version>1.${env.GITHUB_RUN_NUMBER}.${env.GITHUB_RUN_ATTEMPT}</app.version>
-            </properties>
-        </profile>
-        <profile>
             <id>javafx-mac-aarch64</id>
             <activation>
                 <os><family>mac</family><arch>aarch64</arch></os>
