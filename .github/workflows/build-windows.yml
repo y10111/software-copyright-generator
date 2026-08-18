@@ -24,17 +24,17 @@ jobs:
         run: echo "$HOME/target/wix" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - uses: actions/checkout@v4
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: 'temurin'
           cache: 'maven'
-      - name: Download JavaFX SDK (Windows x86_64)
+      - name: Download JavaFX jmods (Windows x86_64)
         run: |
           mkdir javafx-windows-x86_64
-          curl -L -o javafx-sdk.zip https://download2.gluonhq.com/openjfx/21.0.6/openjfx-21.0.6_windows-x86_64_bin-sdk.zip
-          tar -xf javafx-sdk.zip -C javafx-windows-x86_64
-          del javafx-sdk.zip
+          curl -L -o javafx-jmods.zip https://download2.gluonhq.com/openjfx/21.0.6/openjfx-21.0.6_windows-x86_64_bin-jmods.zip
+          Expand-Archive -Path javafx-jmods.zip -DestinationPath javafx-windows-x86_64
+          del javafx-jmods.zip
       - name: Build with Maven
         run: mvn -B clean install --file pom.xml
       - name: Upload MSI
