@@ -35,10 +35,19 @@ jobs:
         run: |
           ls -la target/wix/
           echo "---"
-          echo "Checking light.exe..."
-          which light || echo "WARNING: light.exe NOT on PATH!"
-      - name: Build with Maven
-        run: mvn -e clean install --file pom.xml
+          which light && echo "WiX OK"
+      - name: Maven package (jlink only)
+        run: mvn -e package --file pom.xml
+      - name: Run jpackage manually
+        shell: bash
+        run: |
+          echo "=== jpackage args ==="
+          cat target/packaging/windows-jpackage.txt
+          echo "=== running jpackage ==="
+          jpackage @target/packaging/windows-jpackage.txt 2>&1
+        continue-on-error: true
+      - name: Build with Maven (full)
+        run: mvn -e install --file pom.xml
       - name: Upload MSI
         uses: actions/upload-artifact@v4
         with:
