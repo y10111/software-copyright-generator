@@ -20,6 +20,8 @@
             <Menu text="帮助">
                 <MenuItem text="使用说明" onAction="#onHelp" />
                 <MenuItem text="关于" onAction="#onAbout" />
+                <SeparatorMenuItem />
+                <MenuItem text="支持" onAction="#onSupport" />
             </Menu>
         </MenuBar>
     </top>

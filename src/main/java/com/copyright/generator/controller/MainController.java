@@ -8,6 +8,9 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -172,6 +175,21 @@ public class MainController {
                 "技术栈：Java 21 + JavaFX + Apache POI\n\n" +
                 "Copyright © 2026"
         );
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void onSupport() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("支持");
+        alert.setHeaderText("如果这个工具帮到了你，欢迎请作者喝杯咖啡~");
+
+        ImageView qrCode = new ImageView(new Image(getClass().getResourceAsStream("/qrcode.jpg")));
+        qrCode.setFitWidth(220);
+        qrCode.setPreserveRatio(true);
+        qrCode.setSmooth(true);
+
+        alert.getDialogPane().setContent(qrCode);
         alert.showAndWait();
     }
 
