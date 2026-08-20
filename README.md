@@ -1,6 +1,17 @@
 # 软著程序鉴别材料生成器
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 自动扫描项目源码，生成符合中国版权保护中心要求的程序鉴别材料 Word 文档。
+
+## 下载
+
+| 平台 | 下载 |
+|------|------|
+| macOS (Apple Silicon) | [SoftwareCopyrightGenerator-1.0.0.dmg](https://github.com/y10111/software-copyright-generator/releases/latest) |
+| Windows | [SoftwareCopyrightGenerator-1.0.0.msi](https://github.com/y10111/software-copyright-generator/releases/latest) |
+
+> 前往 [Releases](https://github.com/y10111/software-copyright-generator/releases) 下载最新版本。
 
 ## 功能
 
@@ -39,7 +50,7 @@
 
 ```bash
 # 克隆项目
-git clone <仓库地址>
+git clone https://github.com/y10111/software-copyright-generator.git
 cd software-copyright-generator
 
 # 编译并运行
