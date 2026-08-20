@@ -15,6 +15,14 @@
   - A4 纸张，自动过滤空行，长行（>90 字符）硬截断防溢出
 - 跨平台打开输出目录（macOS Finder 定位文件 / Windows 资源管理器）
 
+## 软件截图
+
+<img src="images/image1.png" width="600" alt="主界面">
+
+<img src="images/image2.png" width="600" alt="生成结果">
+
+<img src="images/image3.png" width="600" alt="输出文档">
+
 ## 技术栈
 
 - Java 21
@@ -69,3 +77,9 @@ src/main/resources/
 ├── fxml/Main.fxml             # 界面布局
 └── css/style.css              # 样式
 ```
+
+## 支持
+
+如果这个工具帮到了你，欢迎请作者喝杯咖啡~
+
+<img src="images/image4.jpg" width="220" alt="收款码">
