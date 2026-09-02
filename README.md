@@ -11,8 +11,8 @@
 
 | 平台 | 安装包 |
 |------|--------|
-| macOS（Apple Silicon） | [SoftwareCopyrightGenerator-1.0.1.dmg](https://github.com/y10111/software-copyright-generator/releases/latest) |
-| Windows | [SoftwareCopyrightGenerator-1.0.1.msi](https://github.com/y10111/software-copyright-generator/releases/latest) |
+| macOS（Apple Silicon） | [SoftwareCopyrightGenerator.dmg](https://github.com/y10111/software-copyright-generator/releases/latest) |
+| Windows | [SoftwareCopyrightGenerator.msi](https://github.com/y10111/software-copyright-generator/releases/latest) |
 
 - Linux 版暂未发布。
 - 前往 [Releases](https://github.com/y10111/software-copyright-generator/releases) 查看全部历史版本与更新说明。
