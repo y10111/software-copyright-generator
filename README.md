@@ -11,8 +11,8 @@
 
 | 平台 | 安装包 |
 |------|--------|
-| macOS（Apple Silicon） | [SoftwareCopyrightGenerator-1.0.0.dmg](https://github.com/y10111/software-copyright-generator/releases/latest) |
-| Windows | [SoftwareCopyrightGenerator-1.0.0.msi](https://github.com/y10111/software-copyright-generator/releases/latest) |
+| macOS（Apple Silicon） | [SoftwareCopyrightGenerator-1.0.1.dmg](https://github.com/y10111/software-copyright-generator/releases/latest) |
+| Windows | [SoftwareCopyrightGenerator-1.0.1.msi](https://github.com/y10111/software-copyright-generator/releases/latest) |
 
 - Linux 版暂未发布。
 - 前往 [Releases](https://github.com/y10111/software-copyright-generator/releases) 查看全部历史版本与更新说明。
@@ -26,7 +26,7 @@
 - 输出 Word（.docx）文档，格式规范：
   - 每页精确 **50 行代码**，五号宋体（10.5pt），英文/数字 Times New Roman
   - 页眉：软件名称+版本号 / 程序鉴别材料 / 页码
-  - 页脚：第 X 页 of 总页数
+  - 页脚：页码 of 总页数（X of Y）
   - A4 纸张，自动过滤空行，超长行智能截断防溢出
 - 一键打开输出目录（macOS Finder / Windows 资源管理器）
 
